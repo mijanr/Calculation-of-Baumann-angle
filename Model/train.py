@@ -5,6 +5,7 @@ import torch.optim as optim
 import torch
 import torch.nn as nn
 from dataLoader import CustomDataset
+import torch.nn.functional as F
 from get_data import Get_Data
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
@@ -20,6 +21,7 @@ imageW = 512
 key_points_path_train, key_points_path_test = Get_Data().patient_level_split()
 X_train, y_train = Get_Data().json_to_data(key_points_path_train, imageH, imageW)
 X_test, y_test = Get_Data().json_to_data(key_points_path_test, imageH, imageW)
+
 
 #make a testloader
 test_dataset = CustomDataset(X_test, y_test)
@@ -45,8 +47,11 @@ transform = A.Compose([
 kf = KFold(n_splits=5, shuffle=True, random_state=42)
 kf.get_n_splits(X_train)
 
+fold = 1
+
 for train_idx, val_idx in kf.split(X_train):
     #split the data
+    
     X_train_fold = [X_train[i] for i in train_idx]
     y_train_fold = [y_train[i] for i in train_idx]
     X_val_fold = [X_train[i] for i in val_idx]
@@ -60,12 +65,16 @@ for train_idx, val_idx in kf.split(X_train):
 
     #train the model
     writer = SummaryWriter()
-    for epoch in trange(1, 200):
+    for epoch in trange(1, 350):
         for i, (images, labels) in enumerate(train_loader):
             images = images.to(device)
             labels = labels.view(-1, 8).to(device)
 
             outputs = model(images)
+            #min max normalization of the whole outputs
+            # outputs = (outputs - outputs.min())/(outputs.max() - outputs.min())
+            # labels = (labels - labels.min())/(labels.max() - labels.min())
+
 
             optimizer.zero_grad()            
             loss = criterion(outputs, labels)
@@ -80,20 +89,30 @@ for train_idx, val_idx in kf.split(X_train):
                 images = images.to(device)
 
                 outputs = model(images)
+                # outputs = (outputs - outputs.min())/(outputs.max() - outputs.min())
+                # labels = (labels - labels.min())/(labels.max() - labels.min())
+
+
 
                 loss = criterion(outputs, labels)
                 writer.add_scalar('Validation loss: ', loss, epoch)
         print("Epoch: ", epoch, "Validation Loss: ", loss.item())
     writer.close()
+    #save the model for each fold
+    model.cpu()
+    torch.save(model.state_dict(), 'model_folds/model_fold_' + str(fold) + '.pt')
+    fold += 1
+    model.to(device)
 
 #save the model on cpu
-model.cpu()
+# model.cpu()
+# torch.save(model.state_dict(), 'model_ResNet-50_not_normalized.pt')
 
 #test the model
-with torch.no_grad():
-    for images, labels in test_loader:
-        images = images.to(device)
-        labels = labels.view(-1, 8).to(device)
-        outputs = model(images)
-        loss = criterion(outputs, labels)
-    print("Test Loss: ", loss.item())
+# with torch.no_grad():
+#     for images, labels in test_loader:
+#         images = images.to(device)
+#         labels = labels.view(-1, 8).to(device)
+#         outputs = model(images)
+#         loss = criterion(outputs, labels)
+#     print("Test Loss: ", loss.item())

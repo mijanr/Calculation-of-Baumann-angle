@@ -84,6 +84,11 @@ class Get_Data:
 
             labels.append(label)
             images.append(torch.Tensor(image).float())
+            #normalize the labels
+            #labels[-1] = (labels[-1] - torch.mean(labels[-1]))/torch.std(labels[-1])
+            #min max normalization
+            #labels[-1] = (labels[-1] - torch.min(labels[-1]))/(torch.max(labels[-1]) - torch.min(labels[-1]))
+
         return images, labels
 
 
@@ -93,4 +98,4 @@ if __name__ == "__main__":
     get_data = Get_Data()
     key_points_path_train, key_points_path_test = get_data.patient_level_split()
     images, labels = get_data.json_to_data(key_points_path_train, 512, 512)
-    print(len(images))
+   
