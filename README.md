@@ -9,6 +9,10 @@ The dataset used is publicly available [Musculoskeletal Radiographs (MURA)](http
 ![MURA dataset](imgs/image1.png)
 ![MURA dataset](imgs/image2.png)
 So, the images are labelled with [Labelme](https://github.com/wkentaro/labelme) for 8 distinct points. 
+Those are: Humerus, Posterior Border Line, Anterior Border Line, Proximal Shaft Intersection, Distal Shaft Intersection, Shaft Centerline, Tangent, Articular Block. 
+Once the images are annotated, and two lines are draw, and the angle between them is calculated. The angle is the Baumann angle. The annotated images look like this:
+![Labeled images](imgs/labeled_image.PNG)
+![MURA dataset](imgs/labeled_img.png)
 
 ## Libraries used
 - numpy
