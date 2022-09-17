@@ -24,6 +24,7 @@ A regression based approach is taken to accomplish the task. A vanilla CNN netwo
 
 ## Results
 The predictions made by the model are as follows:
+
 ![Predictions](imgs/test_1.png)
 ![Predictions](imgs/test_5.png)
 ![Predictions](imgs/test_6.png)
