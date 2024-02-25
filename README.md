@@ -1,5 +1,4 @@
-# Project title
-Calculation of Baumann angle using deep learning methods.
+# Calculation of Baumann angle using deep learning methods.
 
 ## Description
 Baumann angle, also known
