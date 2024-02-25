@@ -19,7 +19,7 @@ Once the images are annotated, and two lines are draw, and the angle between the
 ![MURA dataset](imgs/labeled_img.png)
 
 ## Model
-A regression based approach is taken to accomplish the task. A vanilla CNN network is used to perform some experiments, and them a [ResNet50](https://arxiv.org/abs/1512.03385) is used for final training and prediction purpose. 
+A regression based approach is taken to accomplish the task. A vanilla CNN network is used to perform some experiments, and finally a [ResNet50](https://arxiv.org/abs/1512.03385) is used for final training and prediction purpose. 
 
 ## Results
 The predictions made by the model are as follows:
